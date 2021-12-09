@@ -32,7 +32,7 @@ development dataset and will be randomly split 80/20 into train/val dataset with
 - Gradability 
 - Known_Laterality_Retinal (*For Retinal_Field and Gradability models*)
    - With 'Yes' to indicate retinal images of known laterality
-- PID (*optional unique identifier column if multiple samples form the same patient*)
+- PID (*optional unique identifier column if multiple samples from the same patient*)
 
 
 **If predicting then the following columns must be present**
@@ -47,15 +47,15 @@ or multi-output model based on the provided label_column +/- aux-column with 20 
 dropout (0.2, 0.5), learning_rate (1e-4, 1e-2) and regularisation (0.0001, 0.01).
 
 **train**: Training mode will load the csv, split into train/val datasets at 80/20 splits and train a single 
-or multi-output model based on the provided label_column +/- aux-column and save the model at each epoch if the 
+or multi-output model based on the provided label_column +/- aux_column and save the model at each epoch if the 
 monitored metric improves. Note, initially the encoder weights (EfficientNet-V1-B0) are frozen until early stop criteria 
-reached then the whole model is trained.
+are reached then the whole model is trained.
 
 **test**: Training mode will load the csv and return confusion matrices and ROC curves for the label_column +/- 
-aux-column and save the resulting figures.
+aux_column and save the resulting figures.
 
 **Predict**: Predict mode will load the csv and return predictions for binary labels or the argmax index for 
-multi-class labels saved back in the original csv.
+multi-class labels saved in the original csv.
 
 ### Single-output model with tune, train, test or predict modes
 ```main.py  -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality'] -mt single-output -m ['mode']```
@@ -75,21 +75,20 @@ If performing inference (test or predict modes) a path to the trained model (-mp
 - -r: Regularisation (default: 0.001)
 
 #### Defaults
-- *save_examples: Save batch of examples for inspection (default:True)*
+- *save_examples: Save a batch of image examples for inspection (default:True)*
 - *seed: Random seed for splitting development dataset into train/val partitions (default: 7)* 
 - *image_size: Image size (default: [224, 224])*
 - *patience: Early stopping patience (default: 3 epochs)*
-- *early_stopping: This is performed by default and the val_AUC is monitored for single-output models otherwise the 
+- *early_stopping: This is performed by default and the val_AUC is monitored for single-output models whilst the 
   val_loss is used for multi-output models*
-- *train_val_split: Ration of development dataset to split into train and val partitions (default: 80/20)*  
+- *train_val_split: Ratio of development dataset to split into train and val partitions (default: 80/20)*  
 - *max_epochs: Maximum training epochs (default: 50 epochs)*
 
 ## Funding
-[Diabetes UK]: https://www.diabetes.org.uk/research/our-research-projects/london/nderitu-ai-retinopathy
-This work is wholly funded by Diabetes UK via the [Sir George Alberti Training Fellowship](https://www.diabetes.org.uk/research/for-researchers/apply-for-a-grant/sir-george-alberti-research-training-fellowship) to grant to Paul Nderitu.
+This work is wholly funded by Diabetes UK via the [Sir George Alberti Training Fellowship](https://www.diabetes.org.uk/research/our-research-projects/london/nderitu-ai-retinopathy) to grant to Paul Nderitu.
 
 ## Citation
-If you use this work as part of your project, please consider citing [Nderitu p et al., (2022)]()
+If you use this work as part of your project, please cite [Nderitu, P *et al.,* (2022)]()
 
 ```bibtex
 @article{nderitup2022,
