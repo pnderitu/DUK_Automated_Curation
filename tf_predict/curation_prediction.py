@@ -91,10 +91,7 @@ class SingleOutputPredictor:
         all_img_df = all_img_df.replace(self.class_dict)
 
         # Select the correct testing images for gradability and retinal field models (known laterality retinal images)
-        if self.label_column in ['Gradability'] or self.label_column in ['Retinal_Field']:
-            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
-        else:
-            select_img_df = all_img_df
+        select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
 
         dropped_images = all_img_df.index.size - select_img_df.index.size
 
@@ -308,12 +305,9 @@ class MultiOutputPredictor(SingleOutputPredictor):
 
         # Map the aux_column class dict strings to integers
         all_img_df = all_img_df.replace(self.aux_dict)
-        # Select the correct testing images for gradability and retinal field models (known laterality retinal images)
-        if self.label_column in ['Gradability'] or self.label_column in ['Retinal_Field']:
-            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
-        else:
-            select_img_df = all_img_df
 
+        # Select the correct testing images for gradability and retinal field models (known laterality retinal images)
+        select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
         dropped_images = all_img_df.index.size - select_img_df.index.size
 
         # Reset index after dropping examples
