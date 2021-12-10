@@ -7,8 +7,8 @@ def parse_config(args):
 
     # Add the label class dictionaries
     if config_dict['label_column'] == 'Laterality':
-        config_dict.update({'class_dict': {'Right': 0, 'Left': 1, 'N/A': 2}})
-    elif config_dict['label_column'] == 'Retinal_Status':
+        config_dict.update({'class_dict': {'Right': 0, 'Left': 1, 'Unidentifiable': 2}})
+    elif config_dict['label_column'] == 'Retinal_Presence':
         config_dict.update({'class_dict': {'Non-Retinal': 0, 'Retinal': 1}})
     elif config_dict['label_column'] == 'Retinal_Field':
         config_dict.update({'class_dict': {'Macula': 0, 'Nasal': 1, 'ORF': 2}})
@@ -19,8 +19,8 @@ def parse_config(args):
 
     # Add the label class dictionaries
     if config_dict['aux_column'] == 'Laterality':
-        config_dict.update({'aux_dict': {'Right': 0, 'Left': 1, 'N/A': 2}})
-    elif config_dict['aux_column'] == 'Retinal_Status':
+        config_dict.update({'aux_dict': {'Right': 0, 'Left': 1, 'Unidentifiable': 2}})
+    elif config_dict['aux_column'] == 'Retinal_Presence':
         config_dict.update({'aux_dict': {'Non-Retinal': 0, 'Retinal': 1}})
     elif config_dict['aux_column'] == 'Retinal_Field':
         config_dict.update({'aux_dict': {'Macula': 0, 'Nasal': 1, 'ORF': 2}})

@@ -1,4 +1,4 @@
-# Tensorflow Image Curation Models
+# Tensorflow Image Curation Model Trainer
 # Paul Nderitu and Diabetes UK 2021
 
 import os
@@ -20,7 +20,7 @@ class SingleOutputClassifier:
     """
     Class to train, tune and validate a CNN model to classify images for single curation tasks.
     Uses transfer learning with the EfficientNet-B0 as the base model by default with an image input size of 224x224x3.
-    Images are not flipped horizontally where laterality is unknown [Laterality and Retinal_Status Models].
+    Images are not flipped horizontally where laterality is unknown [Laterality and Retinal_Presence Models].
     Can train binary and multi-class models.
     """
 
@@ -35,8 +35,8 @@ class SingleOutputClassifier:
         :keyword save_path: Path to save the model training and validation outputs
         :keyword label_column: Name of the label column
         :keyword class_dict: Dictionary of the class name and value pair
-        :keyword height: Height to resize images for the model (default: 224 --> for EfficientNetB0)
-        :keyword width: Width to resize images for the model (default: 224 --> for EfficientNetB0)
+        :keyword height: Height to resize images for the model (default: 224)
+        :keyword width: Width to resize images for the model (default: 224)
         :keyword batch_size: Batch size (default: 32)
         :keyword use_class_weights: Bool, if True, apply class weights (default: True)
         :keyword max_epochs: Max epochs to train for (early stopping is employed) (default: 50)
@@ -70,8 +70,6 @@ class SingleOutputClassifier:
             self.loss = losses.BinaryCrossentropy()
         elif self.nclasses > 2:
             self.loss = losses.CategoricalCrossentropy()
-
-        print(os.path.exists(os.path.join(self.save_path, 'TF', 'Model', self.label_column)))
 
         # Add to self
         self.model_path = os.path.join(self.save_path, 'TF', 'Model', self.label_column)
@@ -129,9 +127,9 @@ class SingleOutputClassifier:
 
         # Drop the non-retinal images if training the gradability or retinal_field models
         if self.label_column in ['Gradability']:
-            select_img_df = all_img_df[all_img_df['Retinal_Status'] == 1]
+            select_img_df = all_img_df[all_img_df['Retinal_Presence'] == 1]
         elif self.label_column in ['Retinal_Field']:
-            select_img_df = all_img_df[all_img_df['Retinal_Status'] == 1]
+            select_img_df = all_img_df[all_img_df['Retinal_Presence'] == 1]
         else:
             select_img_df = all_img_df
 
@@ -218,8 +216,8 @@ class SingleOutputClassifier:
         # Resize image
         resized_image = tf.image.resize(image, size=(self.height, self.width))
 
-        # If the model in not a laterality or Retinal_Status model, flip all left eye images to right orientation
-        if self.label_column not in ['Laterality', 'Retinal_Status']:
+        # If the model in not a laterality or Retinal_Presence model, flip all left eye images to right orientation
+        if self.label_column not in ['Laterality', 'Retinal_Presence']:
             if laterality == tf.constant(1, dtype=laterality.dtype):
                 resized_image = tf.image.flip_left_right(resized_image)
             elif laterality == tf.constant(0, dtype=laterality.dtype):
@@ -269,7 +267,7 @@ class SingleOutputClassifier:
         """
 
         # Check the correct dataset name has been used
-        assert dataset_name in ['train', 'aug_train', 'val'], 'Dataset name must be train, val, ' \
+        assert dataset_name in ['train', 'aug_train', 'val'], 'Dataset name must be train, aug_train or val, ' \
                                                               'got {}'.format(dataset_name)
 
         # Get a batch of images and labels
@@ -303,8 +301,8 @@ class SingleOutputClassifier:
         :return: TF dataset
         """
 
-        # If this is for a laterality or retinal_status model then this column does not exist
-        if self.label_column not in ['Laterality', 'Retinal_Status']:
+        # If this is for a laterality or Retinal_Presence model then this column does not exist
+        if self.label_column not in ['Laterality', 'Retinal_Presence']:
             laterality = df['Laterality']
         else:
             laterality = None
@@ -471,11 +469,11 @@ class SingleOutputClassifier:
 
         return model
 
-    def tune_model(self, tune_iterations: int = 20):
+    def tune_model(self, tune_iterations: int = 10):
         """
         Tunes classification model parameters and saves as a log via the Tensorboard callback.
 
-        :param tune_iterations: Number of times to randomly sample from the hyperparameter intervals (default: 20)
+        :param tune_iterations: Number of times to randomly sample from the hyperparameter intervals (default: 10)
         """
 
         # Get the train and val datasets
@@ -509,7 +507,7 @@ class SingleOutputClassifier:
             model = self._build_model()
 
             # Fit and train for 2 epochs
-            model.fit(train_ds, steps_per_epoch=self.train_steps, epochs=5, class_weight=class_weights)
+            model.fit(train_ds, steps_per_epoch=self.train_steps, epochs=3, class_weight=class_weights)
 
             # Get performance metrics for the hparams
             loss, m_auc, m_prc = model.evaluate(val_ds, steps=self.val_steps)
@@ -607,7 +605,7 @@ class SingleOutputClassifier:
         """
 
         # Print laterality message
-        if self.label_column not in ['Laterality', 'Retinal_Status']:
+        if self.label_column not in ['Laterality', 'Retinal_Presence']:
             print('Left eye images will be flipped to right eye orientation')
 
         # Get the train and val datasets
@@ -669,9 +667,9 @@ class MultiOutputClassifier(SingleOutputClassifier):
 
         # If training gradability or retinal_field model then drop the non-retinal images
         if 'Gradability' in [self.label_column, self.aux_column]:
-            select_img_df = all_img_df[all_img_df['Retinal_Status'] == 1]
+            select_img_df = all_img_df[all_img_df['Retinal_Presence'] == 1]
         elif 'Retinal_Field' in [self.label_column, self.aux_column]:
-            select_img_df = all_img_df[all_img_df['Retinal_Status'] == 1]
+            select_img_df = all_img_df[all_img_df['Retinal_Presence'] == 1]
         else:
             select_img_df = all_img_df
 
@@ -732,9 +730,9 @@ class MultiOutputClassifier(SingleOutputClassifier):
         :return: TF dataset
         """
 
-        # If this is for a laterality or retinal_status model then this column does not exist
-        if self.label_column not in ['Laterality', 'Retinal_Status']:
-            if self.aux_column not in ['Laterality', 'Retinal_Status']:
+        # If this is for a laterality or Retinal_Presence model then this column does not exist
+        if self.label_column not in ['Laterality', 'Retinal_Presence']:
+            if self.aux_column not in ['Laterality', 'Retinal_Presence']:
                 laterality = df['Laterality']
             else:
                 laterality = None
@@ -792,7 +790,7 @@ class MultiOutputClassifier(SingleOutputClassifier):
         """
 
         # Check the correct dataset name has been used
-        assert dataset_name in ['train', 'aug_train', 'val'], 'Dataset name must be train, val ' \
+        assert dataset_name in ['train', 'aug_train', 'val'], 'Dataset name must be train, aug_train or val ' \
                                                               'got {}'.format(dataset_name)
 
         # Get a batch of images and labels
@@ -980,11 +978,11 @@ class MultiOutputClassifier(SingleOutputClassifier):
         model.fit(train_dataset, steps_per_epoch=self.train_steps, class_weight=class_weights, epochs=self.max_epochs,
                   validation_steps=self.val_steps, validation_data=val_dataset, callbacks=[ES, MS2, TB2, LR2])
 
-    def tune_model(self, tune_iterations: int = 20):
+    def tune_model(self, tune_iterations: int = 10):
         """
         Tunes classification model parameters and saves as a log via the Tensorboard callback.
 
-        :param tune_iterations: Number of times to randomly sample from the hyperparameter intervals (default: 20)
+        :param tune_iterations: Number of times to randomly sample from the hyperparameter intervals (default: 10)
         """
 
         # Get the train and val datasets
@@ -1014,7 +1012,7 @@ class MultiOutputClassifier(SingleOutputClassifier):
             model = self._build_model()
 
             # Fit and train for 2 epochs
-            model.fit(train_ds, steps_per_epoch=self.train_steps, class_weight=class_weights, epochs=5)
+            model.fit(train_ds, steps_per_epoch=self.train_steps, class_weight=class_weights, epochs=3)
 
             # Get performance metrics for the hparams
             total_loss, primary_loss, aux_loss, primary_auc, aux_auc, primary_prc, aux_prc = model.evaluate(

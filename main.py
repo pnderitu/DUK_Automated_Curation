@@ -19,15 +19,15 @@ if __name__ == '__main__':
     parser.add_argument('-l', '--label_column', type=str, default='Laterality',
                         help="Name of the label column (default: Laterality)")
 
-    parser.add_argument('-al', '--aux_column', type=str, default='Retinal_Status',
+    parser.add_argument('-al', '--aux_column', type=str, default='Retinal_Presence',
                         help="Name of the auxiliary label column if training or predicting using a multi-output model"
-                             "(default: Retinal_Status)")
+                             "(default: Retinal_Presence)")
 
     parser.add_argument('-mt', '--model_type', type=str, default='multi-output',
-                        help='Select the type of modelling approach (default: multi-output)')
+                        help='Select the modelling approach (default: multi-output)')
 
-    parser.add_argument('-m', '--mode', type=str, default="predict",
-                        help='Select the mode. Must be train, tune, test or predict (default: train)')
+    parser.add_argument('-m', '--mode', type=str, default="train",
+                        help='Select the mode. Must be  tune, train, test or predict (default: train)')
 
     parser.add_argument('-ucw', '--use_class_weights', type=bool, default=True,
                         help="If class weights should be used (single-output models only) (default: True)")
@@ -41,7 +41,7 @@ if __name__ == '__main__':
                         help="Regularisation (default: 0.001)")
 
     parser.add_argument('-mp', '--model_path', type=str,
-                        help='Path to a saved Tensorflow model if testing or getting predictions')
+                        help='Path to a saved Tensorflow model if testing or predicting')
 
     # Get args and add config
     args = parser.parse_args()
@@ -70,7 +70,7 @@ if __name__ == '__main__':
         trainer = MultiOutputPredictor(**config)
 
     else:
-        raise AttributeError("No or invalid model_type and mode provided, must be 'single-output' or 'multi-output' "
+        raise AttributeError("Invalid model_type and mode provided, must be 'single-output' or 'multi-output' "
                              "model_type with either 'train', 'tune', 'test' or 'predict' modes")
 
     # Run training, tuning, testing or prediction as per the mode
@@ -88,14 +88,14 @@ if __name__ == '__main__':
 
     # Test
     if config['mode'] == 'test':
-        assert config['model_path'] is not None, ' No model path provided'
+        assert config['model_path'] is not None, 'No model path provided'
         assert config['label_column'] is not None or config['aux_column'], 'No labels provided'
         print('-------------- Selected mode: test --------------\n')
         trainer.test_model()
 
     # Predict
     if config['mode'] == 'predict':
-        assert config['model_path'] is not None, ' No model path provided'
+        assert config['model_path'] is not None, 'No model path provided'
         assert config['label_column'] is not None or config['aux_column'], 'No labels provided'
         print('-------------- Selected mode: predict --------------\n')
         trainer.get_predictions()

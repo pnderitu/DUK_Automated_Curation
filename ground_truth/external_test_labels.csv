@@ -1,4 +1,4 @@
-Dataset,Image_ID,ICDRSS,STDR,Laterality,Retinal_Status,Retinal_Field,Gradability,Known_Laterality_Retinal
+Dataset,Image_ID,ICDRSS,STDR,Laterality,Retinal_Presence,Retinal_Field,Gradability,Known_Laterality_Retinal
 Paraguay_DR,1378,Advanced PDR,STDR,Left,Retinal,Macula,Ungradable,Yes
 Paraguay_DR,1370,Advanced PDR,STDR,Left,Retinal,Macula,Ungradable,Yes
 Paraguay_DR,918,Severe NPDR,STDR,Left,Retinal,Macula,Ungradable,Yes
@@ -1215,16 +1215,16 @@ Paraguay_DR,977,Severe NPDR,STDR,Right,Retinal,Nasal,Gradable,Yes
 Paraguay_DR,839,Severe NPDR,STDR,Right,Retinal,Nasal,Gradable,Yes
 Paraguay_DR,372,No DR signs,No STDR,Right,Retinal,Nasal,Gradable,Yes
 Paraguay_DR,935,Severe NPDR,STDR,Right,Retinal,Nasal,Gradable,Yes
-Paraguay_DR,1365,Advanced PDR,STDR,N/A,Retinal,ORF,Ungradable,
-Paraguay_DR,1353,Advanced PDR,STDR,N/A,Retinal,ORF,Ungradable,
-Paraguay_DR,1358,Advanced PDR,STDR,N/A,Retinal,ORF,Ungradable,
-Paraguay_DR,1383,Advanced PDR,STDR,N/A,Retinal,ORF,Ungradable,
-Paraguay_DR,1351,Advanced PDR,STDR,N/A,Retinal,ORF,Ungradable,
-Paraguay_DR,1352,Advanced PDR,STDR,N/A,Retinal,ORF,Ungradable,
-Paraguay_DR,985,Severe NPDR,STDR,N/A,Retinal,ORF,Ungradable,
-Paraguay_DR,1354,Advanced PDR,STDR,N/A,Retinal,ORF,Ungradable,
-Paraguay_DR,1356,Advanced PDR,STDR,N/A,Retinal,ORF,Ungradable,
-Paraguay_DR,1374,Advanced PDR,STDR,N/A,Retinal,ORF,Ungradable,
+Paraguay_DR,1365,Advanced PDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
+Paraguay_DR,1353,Advanced PDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
+Paraguay_DR,1358,Advanced PDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
+Paraguay_DR,1383,Advanced PDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
+Paraguay_DR,1351,Advanced PDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
+Paraguay_DR,1352,Advanced PDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
+Paraguay_DR,985,Severe NPDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
+Paraguay_DR,1354,Advanced PDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
+Paraguay_DR,1356,Advanced PDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
+Paraguay_DR,1374,Advanced PDR,STDR,Unidentifiable,Retinal,ORF,Ungradable,
 Paraguay_DR,1359,Advanced PDR,STDR,Left,Retinal,ORF,Ungradable,Yes
 Paraguay_DR,852,Severe NPDR,STDR,Left,Retinal,ORF,Ungradable,Yes
 Paraguay_DR,914,Severe NPDR,STDR,Left,Retinal,ORF,Ungradable,Yes

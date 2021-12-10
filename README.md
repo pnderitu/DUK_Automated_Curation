@@ -15,7 +15,7 @@ This repository contains a Tensorflow 2.7.0 implementation from the paper
 *  Ground truth labels for the external validation dataset (in *ground_truth/external_test_labels.csv*).
 
 ## Ground Truth Definitions
-Labels for laterality, retinal status, retinal field and gradability were defined by an ophthalmology fellow.
+Labels for laterality, retinal presence, retinal field and gradability were defined by an ophthalmology fellow.
 The figure below shows examples from the external test set. More details can be found in our paper [supplementary materials]().
 
 ![fig](ground_truth/gt_definitions.jpg )
@@ -27,7 +27,7 @@ development dataset and will be randomly split 80/20 into train/val dataset with
 **If training, tuning or testing ensure the following columns are provided and named as follows.**
 - Image_ID
 - Laterality 
-- Retinal_Status
+- Retinal_Presence
 - Retinal_Field 
 - Gradability 
 - Known_Laterality_Retinal (*For Retinal_Field and Gradability models*)
@@ -63,7 +63,7 @@ multi-class labels saved in the original csv.
 If performing inference (test or predict modes) a path to the trained model (-mp) must also be provided.
 
 ### Multi-output model with tune, train, test or predict modes
-```main.py  -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality']  -al ['second label column e.g., Retinal_Status'] -mt multi-output -m ['mode']```
+```main.py  -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality']  -al ['second label column e.g., Retinal_Presence'] -mt multi-output -m ['mode']```
 
 If performing inference (test or predict modes) a path to the trained model (-mp) must also be provided.
 

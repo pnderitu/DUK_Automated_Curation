@@ -1,4 +1,4 @@
-# Tensorflow Image Curation Models
+# Tensorflow Image Curation Prediction
 # Paul Nderitu and Diabetes UK 2021
 
 import os
@@ -16,7 +16,7 @@ plt.style.use('seaborn-deep')
 # noinspection PyBroadException
 class SingleOutputPredictor:
     """
-    This class takes a trained TF ML model and classifies images for a given label and returns a CSV file with the class
+    This class takes a trained TF model and classifies images for a given label and returns a CSV file with the class
     predictions added as new column. For binary classes the prediction score is returned but for multi-class
     predictions the argmax integer class label is returned. Can also perform model testing with CM and ROC curves
     plotted.
@@ -91,8 +91,12 @@ class SingleOutputPredictor:
         all_img_df = all_img_df.replace(self.class_dict)
 
         # Select the correct testing images for gradability and retinal field models (known laterality retinal images)
-        select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
-
+        if self.label_column in ['Gradability']:
+            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
+        elif self.label_column in ['Retinal_Field']:
+            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
+        else:
+            select_img_df = all_img_df
         dropped_images = all_img_df.index.size - select_img_df.index.size
 
         # Reset index after dropping examples
@@ -118,8 +122,8 @@ class SingleOutputPredictor:
         # Resize image
         resized_image = tf.image.resize(image, size=(self.height, self.width))
 
-        # If the model in not a laterality or retinal_status trainer then flip all left eye images to right orientation
-        if self.label_column not in ['Laterality', 'Retinal_Status']:
+        # If model in not a laterality or Retinal_Presence trainer then flip all left eye images to right orientation
+        if self.label_column not in ['Laterality', 'Retinal_Presence']:
             if laterality == tf.constant(1, dtype=laterality.dtype):
                 resized_image = tf.image.flip_left_right(resized_image)
             elif laterality == tf.constant(0, dtype=laterality.dtype):
@@ -140,8 +144,8 @@ class SingleOutputPredictor:
         :return: TF dataset
         """
 
-        # If this is for a laterality or Retinal_Status model then don't use this column
-        if self.label_column not in ['Laterality', 'Retinal_Status']:
+        # If this is for a laterality or Retinal_Presence model then don't use this column
+        if self.label_column not in ['Laterality', 'Retinal_Presence']:
             laterality = df['Laterality']
         else:
             laterality = None
@@ -158,7 +162,7 @@ class SingleOutputPredictor:
 
         print('Getting Predictions')
 
-        if self.label_column not in ['Laterality', 'Retinal_Status']:
+        if self.label_column not in ['Laterality', 'Retinal_Presence']:
             print('Left eye images will be flipped to right eye orientation')
 
         # Load the model
@@ -266,7 +270,7 @@ class SingleOutputPredictor:
 # noinspection PyBroadException
 class MultiOutputPredictor(SingleOutputPredictor):
     """
-    Extension class loads a TF ML model and classifies images for a given primary and auxiliary label.
+    Extension class loads a TF model and classifies images for a given primary and auxiliary label.
     """
 
     def __init__(self, **kwargs):
@@ -307,7 +311,12 @@ class MultiOutputPredictor(SingleOutputPredictor):
         all_img_df = all_img_df.replace(self.aux_dict)
 
         # Select the correct testing images for gradability and retinal field models (known laterality retinal images)
-        select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
+        if self.label_column in ['Gradability']:
+            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
+        elif self.label_column in ['Retinal_Field']:
+            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
+        else:
+            select_img_df = all_img_df
         dropped_images = all_img_df.index.size - select_img_df.index.size
 
         # Reset index after dropping examples
@@ -324,9 +333,9 @@ class MultiOutputPredictor(SingleOutputPredictor):
         :return: TF dataset
         """
 
-        # If this is for a laterality or Retinal_Status model then this column does not exist
-        if self.label_column not in ['Laterality', 'Retinal_Status']:
-            if self.aux_column not in ['Laterality', 'Retinal_Status']:
+        # If this is for a laterality or Retinal_Presence model then this column does not exist
+        if self.label_column not in ['Laterality', 'Retinal_Presence']:
+            if self.aux_column not in ['Laterality', 'Retinal_Presence']:
                 laterality = df['Laterality']
             else:
                 laterality = None
@@ -345,7 +354,7 @@ class MultiOutputPredictor(SingleOutputPredictor):
 
         print('Getting Predictions')
 
-        if self.label_column not in ['Laterality', 'Retinal_Status']:
+        if self.label_column not in ['Laterality', 'Retinal_Presence']:
             print('Left eye images will be flipped to right eye orientation')
 
         # Load the model
