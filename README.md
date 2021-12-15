@@ -6,8 +6,8 @@ This repository contains a Tensorflow 2.7.0 implementation from the paper
    - Python v3.8.x
    - Tensorflow v2.7.x
    - Sklearn v1.0.x
-   - Numpy
-   - Matplotlib & Seaborn
+   - Numpy v1.20.x
+   - Matplotlib v3.5.x & Seaborn v0.11.x
 
 ## Modules and Resources
 *  Class to tune, train and validate a single or multi-output Tensorflow classifier.
