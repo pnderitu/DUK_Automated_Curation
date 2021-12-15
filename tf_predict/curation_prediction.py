@@ -90,7 +90,7 @@ class SingleOutputPredictor:
         # Map the label_column class dict strings to integers
         all_img_df = all_img_df.replace(self.class_dict)
 
-        # Select the correct testing images for gradability and retinal field models (known laterality retinal images)
+        # Select the correct images for gradability and retinal field models (known laterality retinal images)
         if self.label_column in ['Gradability']:
             select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
         elif self.label_column in ['Retinal_Field']:
@@ -124,12 +124,12 @@ class SingleOutputPredictor:
 
         # If model in not a laterality or Retinal_Presence trainer then flip all left eye images to right orientation
         if self.label_column not in ['Laterality', 'Retinal_Presence']:
-            if laterality == tf.constant(1, dtype=laterality.dtype):
+            if laterality == tf.constant('Left', dtype=laterality.dtype):
                 resized_image = tf.image.flip_left_right(resized_image)
-            elif laterality == tf.constant(0, dtype=laterality.dtype):
+            elif laterality == tf.constant('Right', dtype=laterality.dtype):
                 pass
-            elif laterality == tf.constant(2, dtype=laterality.dtype):
-                tf.print('Warning, N/A laterality image detected, check the laterality definitions!')
+            elif laterality == tf.constant('Unidentifiable', dtype=laterality.dtype):
+                tf.print('Warning, unidentifiable laterality image detected, check the laterality definitions!')
                 pass
             else:
                 tf.print('Warning, missing laterality image detected, check the laterality definitions!')
@@ -310,7 +310,7 @@ class MultiOutputPredictor(SingleOutputPredictor):
         # Map the aux_column class dict strings to integers
         all_img_df = all_img_df.replace(self.aux_dict)
 
-        # Select the correct testing images for gradability and retinal field models (known laterality retinal images)
+        # Select the correct images for gradability and retinal field models (known laterality retinal images)
         if self.label_column in ['Gradability']:
             select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
         elif self.label_column in ['Retinal_Field']:

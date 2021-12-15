@@ -125,14 +125,13 @@ class SingleOutputClassifier:
         # Map the label_column class dict strings to integers
         all_img_df = all_img_df.replace(self.class_dict)
 
-        # Drop the non-retinal images if training the gradability or retinal_field models
+        # Select the correct images for gradability and retinal field models (known laterality retinal images)
         if self.label_column in ['Gradability']:
-            select_img_df = all_img_df[all_img_df['Retinal_Presence'] == 1]
+            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
         elif self.label_column in ['Retinal_Field']:
-            select_img_df = all_img_df[all_img_df['Retinal_Presence'] == 1]
+            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
         else:
             select_img_df = all_img_df
-
         dropped_images = all_img_df.index.size - select_img_df.index.size
 
         # Select images with a known label as defined in the class dictionary
@@ -218,12 +217,12 @@ class SingleOutputClassifier:
 
         # If the model in not a laterality or Retinal_Presence model, flip all left eye images to right orientation
         if self.label_column not in ['Laterality', 'Retinal_Presence']:
-            if laterality == tf.constant(1, dtype=laterality.dtype):
+            if laterality == tf.constant('Left', dtype=laterality.dtype):
                 resized_image = tf.image.flip_left_right(resized_image)
-            elif laterality == tf.constant(0, dtype=laterality.dtype):
+            elif laterality == tf.constant('Right', dtype=laterality.dtype):
                 pass
-            elif laterality == tf.constant(2, dtype=laterality.dtype):
-                tf.print('Warning, N/A laterality image detected, check the laterality definitions!')
+            elif laterality == tf.constant('Unidentifiable', dtype=laterality.dtype):
+                tf.print('Warning, unidentifiable laterality image detected, check the laterality definitions!')
                 pass
             else:
                 tf.print('Warning, missing laterality image detected, check the laterality definitions!')
@@ -665,14 +664,13 @@ class MultiOutputClassifier(SingleOutputClassifier):
         # Map the aux_column class dict strings to integers
         all_img_df = all_img_df.replace(self.aux_dict)
 
-        # If training gradability or retinal_field model then drop the non-retinal images
-        if 'Gradability' in [self.label_column, self.aux_column]:
-            select_img_df = all_img_df[all_img_df['Retinal_Presence'] == 1]
-        elif 'Retinal_Field' in [self.label_column, self.aux_column]:
-            select_img_df = all_img_df[all_img_df['Retinal_Presence'] == 1]
+        # Select the correct images for gradability and retinal field models (known laterality retinal images)
+        if self.label_column in ['Gradability']:
+            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
+        elif self.label_column in ['Retinal_Field']:
+            select_img_df = all_img_df[all_img_df['Known_Laterality_Retinal'] == 'Yes']
         else:
             select_img_df = all_img_df
-
         dropped_images = all_img_df.index.size - select_img_df.index.size
 
         # Select images with a known label as defined in the class dictionary
