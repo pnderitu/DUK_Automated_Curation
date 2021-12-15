@@ -43,16 +43,16 @@ development dataset and will be randomly split 80/20 into train/val dataset with
 ### Modes
 **tune**: Tune mode will load the development csv, split into train/val datasets at 80/20 splits and train a single 
 or multi-output model based on the provided label_column +/- aux-column with 20 iterations performed 
-(max 5 epochs per iteration), and the hparam space is randomly sampled as follows: 
+(max 3 epochs per iteration), and the hparam space is randomly sampled as follows: 
 dropout (0.2, 0.5), learning_rate (1e-4, 1e-2) and regularisation (0.0001, 0.01).
 
 **train**: Training mode will load the csv, split into train/val datasets at 80/20 splits and train a single 
 or multi-output model based on the provided label_column +/- aux_column and save the model at each epoch if the 
-monitored metric improves. Note, initially the encoder weights (EfficientNet-V1-B0) are frozen until early stop criteria 
+monitored metric improves (*val_AUC for single-output models, otherwise val_loss*). Note, initially the encoder weights (EfficientNet-V1-B0) are frozen until early stop criteria 
 are reached then the whole model is trained.
 
 **test**: Training mode will load the csv and return confusion matrices and ROC curves for the label_column +/- 
-aux_column and save the resulting figures.
+aux_column and save the resulting figure.
 
 **Predict**: Predict mode will load the csv and return predictions for binary labels or the argmax index for 
 multi-class labels saved in the original csv.
@@ -60,15 +60,15 @@ multi-class labels saved in the original csv.
 ### Single-output model with tune, train, test or predict modes
 ```main.py  -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality'] -mt single-output -m ['mode']```
 
-If performing inference (test or predict modes) a path to the trained model (-mp) must also be provided.
+If performing inference (test or predict modes), ```-mp ['path to the trained model']``` must also be provided.
 
 ### Multi-output model with tune, train, test or predict modes
 ```main.py  -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality']  -al ['second label column e.g., Retinal_Presence'] -mt multi-output -m ['mode']```
 
-If performing inference (test or predict modes) a path to the trained model (-mp) must also be provided.
+If performing inference (test or predict modes), ```-mp ['path to the trained model']``` must also be provided.
 
 #### Other Arguments
-- -ucw: If class weights should be used (single-output models only) (default: True)
+- -ucw: If class weights should be used (*single-output models only*) (default: True)
 - -bs: Batch size (default: 32)
 - -do: Dropout (default: 0.2)
 - -lr: Learning rate (default: 0.001)
@@ -85,7 +85,7 @@ If performing inference (test or predict modes) a path to the trained model (-mp
 - *max_epochs: Maximum training epochs (default: 50 epochs)*
 
 ## Funding
-This work is wholly funded by Diabetes UK via the [Sir George Alberti Training Fellowship](https://www.diabetes.org.uk/research/our-research-projects/london/nderitu-ai-retinopathy) to grant to Paul Nderitu.
+This work is wholly funded by Diabetes UK via a [Sir George Alberti Research Training Fellowship](https://www.diabetes.org.uk/research/our-research-projects/london/nderitu-ai-retinopathy) grant to Paul Nderitu.
 
 ## Citation
 If you use this work as part of your project, please cite [Nderitu, P *et al.,* (2022)]()
