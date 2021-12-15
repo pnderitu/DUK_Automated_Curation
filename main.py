@@ -23,8 +23,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-al', '--aux_column', type=str, default='Retinal_Presence',
                         help="Name of the auxiliary label column if training or predicting using a multi-output model"
-                             "otherwise None"
-                             "(default: Retinal_Presence)")
+                             "otherwise None (default: Retinal_Presence)")
 
     parser.add_argument('-mt', '--model_type', type=str, default='multi-output',
                         help='Select the modelling approach (default: multi-output)')
