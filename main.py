@@ -10,7 +10,9 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-dp', '--df_path', type=str,
-                        help='Path with the csv file containing the Image_IDs, patient ID [PID] (optional) +/- labels')
+                        default='ground_truth/external_test_labels.csv',
+                        help='Path with the csv file containing the Image_IDs, patient ID [PID] (optional) +/- labels'
+                             '(default: ground_truth/external_test_labels.csv')
     parser.add_argument('-ip', '--image_path', type=str,
                         help='Path to the images')
     parser.add_argument('-sp', '--save_path', type=str,
@@ -21,6 +23,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-al', '--aux_column', type=str, default='Retinal_Presence',
                         help="Name of the auxiliary label column if training or predicting using a multi-output model"
+                             "otherwise None"
                              "(default: Retinal_Presence)")
 
     parser.add_argument('-mt', '--model_type', type=str, default='multi-output',
@@ -73,7 +76,8 @@ if __name__ == '__main__':
         raise AttributeError("Invalid model_type and mode provided, must be 'single-output' or 'multi-output' "
                              "model_type with either 'train', 'tune', 'test' or 'predict' modes")
 
-    # Run training, tuning, testing or prediction as per the mode
+    # Run training, tuning, testing or prediction modes
+
     # Tune
     if config['mode'] == 'tune':
         assert config['label_column'] is not None or config['aux_column'], 'No labels provided'
