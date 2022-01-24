@@ -33,9 +33,9 @@ def parse_config(args):
     default_dict = {
         'save_examples': True,
         'seed': 7,
-        'image_size': [224, 224],
+        'image_size': [config_dict['image_height'], config_dict['image_width']],
         'patience': 3,
-        'max_epochs': 50,
+        'max_epochs': config_dict['max_epochs'],
         'hparams': {
             "dropout": config_dict['dropout'],
             "learning_rate": config_dict['learning_rate'],

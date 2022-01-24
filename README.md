@@ -10,9 +10,9 @@ This repository contains a Tensorflow 2.7.0 implementation from the paper
    - Matplotlib v3.5.x & Seaborn v0.11.x
 
 ## Modules and Resources
-*  Class to tune, train and validate a single or multi-output Tensorflow classifier.
-*  Class to test and get predictions from a single or multi-output Tensorflow classifier.
-*  Ground truth labels for the external validation dataset (in *ground_truth/external_test_labels.csv*).
+*  Class to tune, train and validate a single or multi-output Tensorflow EfficientNet V1-B0 classifier.
+*  Class to test and get predictions from a single or multi-output Tensorflow EfficientNet V1-B0 classifier.
+*  Ground truth labels for the external validation dataset (*default: ground_truth/external_test_labels.csv*).
 
 ## Ground Truth Definitions
 Labels for laterality, retinal presence, retinal field and gradability were defined by an ophthalmology fellow.
@@ -25,7 +25,7 @@ All modes require a csv file. If training or tuning then the supplied csv is ass
 development dataset and will be randomly split 80/20 into train/val dataset with respect to the PID if provided.
 
 **If training, tuning or testing ensure the following columns are provided and named as follows.**
-- Image_ID
+- Path (*Path to the sample image*)
 - Laterality 
 - Retinal_Presence
 - Retinal_Field 
@@ -51,7 +51,7 @@ or multi-output model based on the provided label_column +/- aux_column and save
 monitored metric improves (*val_AUC for single-output models, otherwise val_loss*). Note, initially the encoder weights (EfficientNet-V1-B0) are frozen until early stop criteria 
 are reached then the whole model is trained.
 
-**test**: Training mode will load the csv and return confusion matrices and ROC curves for the label_column +/- 
+**test**: Test mode will load the csv and return confusion matrices, ROC and precision-recall curves for the label_column +/- 
 aux_column and save the resulting figure.
 
 **Predict**: Predict mode will load the csv and return predictions for binary labels or the argmax index for 
@@ -73,16 +73,17 @@ If performing inference (test or predict modes), ```-mp ['path to the trained mo
 - -do: Dropout (default: 0.2)
 - -lr: Learning rate (default: 0.001)
 - -r: Regularisation (default: 0.001)
+- -me: Maximum training epochs (default: 50 epochs)
+- -ih: Image height (default: 224)
+- -iw: Image width (default: 224)
 
 #### Defaults
-- *save_examples: Save a batch of image examples for inspection (default:True)*
-- *seed: Random seed for splitting development dataset into train/val partitions (default: 7)* 
-- *image_size: Image size (default: [224, 224])*
 - *patience: Early stopping patience (default: 3 epochs)*
 - *early_stopping: This is performed by default and the val_AUC is monitored for single-output models whilst the 
   val_loss is used for multi-output models*
-- *train_val_split: Ratio of development dataset to split into train and val partitions (default: 80/20)*  
-- *max_epochs: Maximum training epochs (default: 50 epochs)*
+- *train_val_split: Ratio of development dataset to split into train and val partitions (default: 80/20)*
+- *save_examples: Save a batch of image examples for inspection (default:True)*
+- *seed: Random seed for splitting development dataset into train/val partitions (default: 7)*
 
 ## Funding
 This work is wholly funded by Diabetes UK via a [Sir George Alberti Research Training Fellowship](https://www.diabetes.org.uk/research/our-research-projects/london/nderitu-ai-retinopathy) grant to Paul Nderitu.

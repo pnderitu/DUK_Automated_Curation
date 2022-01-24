@@ -33,9 +33,9 @@ class SingleOutputPredictor:
         :keyword save_path: Path to save the model training and validation outputs
         :keyword label_column: Name to give to the label column
         :keyword results_path: Results path was defined in the input for the BaseImageClassifier
-        :keyword height: Height to resize images for the model (default: 224)
-        :keyword width: Width to resize images for the model (default: 224)
-        :keyword batch_size: Batch size (default: 32)
+        :keyword height: Height to resize images for the model
+        :keyword width: Width to resize images for the model
+        :keyword batch_size: Batch size
         :keyword class_dict: Dictionary of the class name and value pair
         """
 

@@ -35,12 +35,12 @@ class SingleOutputClassifier:
         :keyword save_path: Path to save the model training and validation outputs
         :keyword label_column: Name of the label column
         :keyword class_dict: Dictionary of the class name and value pair
-        :keyword height: Height to resize images for the model (default: 224)
-        :keyword width: Width to resize images for the model (default: 224)
-        :keyword batch_size: Batch size (default: 32)
-        :keyword use_class_weights: Bool, if True, apply class weights (default: True)
-        :keyword max_epochs: Max epochs to train for (early stopping is employed) (default: 50)
+        :keyword height: Height to resize images for the model
+        :keyword width: Width to resize images for the model
+        :keyword batch_size: Batch size
+        :keyword max_epochs: Max epochs to train for (early stopping is employed)
         :keyword hparams: Dictionary of model parameters, includes 'dropout', 'regularisation' and 'learning_rate'
+        :keyword use_class_weights: Bool, if True, apply class weights (default: True)
         :keyword monitor: Metric to monitor (default: val_AUC)
         :keyword patience: Patience for early stopping (default: 3 epochs)
         """
@@ -118,9 +118,6 @@ class SingleOutputClassifier:
 
         # Load the dataframe from csv
         all_img_df = pandas.read_csv(self.df_path, na_values=' ', header=0, na_filter=False)
-
-        # Create the path column
-        all_img_df['Path'] = f'{self.image_path}/' + all_img_df['Image_ID'] + '.jpg'
 
         # Map the label_column class dict strings to integers
         all_img_df = all_img_df.replace(self.class_dict)
@@ -654,9 +651,6 @@ class MultiOutputClassifier(SingleOutputClassifier):
 
         # Load the dataframe from csv
         all_img_df = pandas.read_csv(self.df_path, na_values=' ', header=0, na_filter=False)
-
-        # Create the path column
-        all_img_df['Path'] = f'{self.image_path}/' + all_img_df['Image_ID'] + '.jpg'
 
         # Map the label_column class dict strings to integers
         all_img_df = all_img_df.replace(self.class_dict)

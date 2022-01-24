@@ -13,9 +13,9 @@ if __name__ == '__main__':
                         default='ground_truth/external_test_labels.csv',
                         help='Path with the csv file containing the Image_IDs, patient ID [PID] (optional) +/- labels'
                              '(default: ground_truth/external_test_labels.csv')
-    parser.add_argument('-ip', '--image_path', type=str,
+    parser.add_argument('-ip', '--image_path', type=str, required=True,
                         help='Path to the images')
-    parser.add_argument('-sp', '--save_path', type=str,
+    parser.add_argument('-sp', '--save_path', type=str, required=True,
                         help='Path to save logs, models, results and examples')
 
     parser.add_argument('-l', '--label_column', type=str, default='Laterality',
@@ -41,9 +41,15 @@ if __name__ == '__main__':
                         help="Learning rate (default: 0.001)")
     parser.add_argument('-r', '--regularisation', type=float, default=0.001,
                         help="Regularisation (default: 0.001)")
+    parser.add_argument('-me', '--max_epochs', type=float, default=50,
+                        help="Max epochs (default: 50)")
+    parser.add_argument('-ih', '--image_height', type=int, default=224,
+                        help="Image height (default: 224)")
+    parser.add_argument('-iw', '--image_width', type=int, default=224,
+                        help="Image width (default: 224)")
 
     parser.add_argument('-mp', '--model_path', type=str,
-                        help='Path to a saved Tensorflow model if testing or predicting')
+                        help='Path to a saved Tensorflow model if testing or predicting (if testing/predicting)')
 
     # Get args and add config
     args = parser.parse_args()
@@ -72,11 +78,9 @@ if __name__ == '__main__':
         trainer = MultiOutputPredictor(**config)
 
     else:
-        raise AttributeError("Invalid model_type and mode provided, must be 'single-output' or 'multi-output' "
-                             "model_type with either 'train', 'tune', 'test' or 'predict' modes")
+        raise AttributeError("Invalid model_type and mode provided, must be 'single-output' or 'multi-output'")
 
-    # Run training, tuning, testing or prediction modes
-
+    # Modes
     # Tune
     if config['mode'] == 'tune':
         assert config['label_column'] is not None or config['aux_column'], 'No labels provided'
@@ -84,21 +88,24 @@ if __name__ == '__main__':
         trainer.tune_model()
 
     # Train
-    if config['mode'] == 'train':
+    elif config['mode'] == 'train':
         assert config['label_column'] is not None or config['aux_column'], 'No labels provided'
         print('-------------- Selected mode: train --------------\n')
         trainer.train_val_model()
 
     # Test
-    if config['mode'] == 'test':
+    elif config['mode'] == 'test':
         assert config['model_path'] is not None, 'No model path provided'
         assert config['label_column'] is not None or config['aux_column'], 'No labels provided'
         print('-------------- Selected mode: test --------------\n')
         trainer.test_model()
 
     # Predict
-    if config['mode'] == 'predict':
+    elif config['mode'] == 'predict':
         assert config['model_path'] is not None, 'No model path provided'
         assert config['label_column'] is not None or config['aux_column'], 'No labels provided'
         print('-------------- Selected mode: predict --------------\n')
         trainer.get_predictions()
+
+    else:
+        raise AttributeError("Invalid mode, must be 'tune', 'train', 'test' or 'predict'")
