@@ -84,9 +84,6 @@ class SingleOutputPredictor:
         # Load the dataframe from csv
         all_img_df = pandas.read_csv(self.df_path, na_values=' ', header=0, na_filter=False)
 
-        # Create the path column
-        all_img_df['Path'] = f'{self.image_path}/' + all_img_df['Image_ID'] + '.jpg'
-
         # Map the label_column class dict strings to integers
         all_img_df = all_img_df.replace(self.class_dict)
 
@@ -300,9 +297,6 @@ class MultiOutputPredictor(SingleOutputPredictor):
 
         # Load the dataframe from csv
         all_img_df = pandas.read_csv(self.df_path, na_values=' ', header=0, na_filter=False)
-
-        # Create the path column
-        all_img_df['Path'] = f'{self.image_path}/' + all_img_df['Image_ID'] + '.jpg'
 
         # Map the label_column class dict strings to integers
         all_img_df = all_img_df.replace(self.class_dict)
