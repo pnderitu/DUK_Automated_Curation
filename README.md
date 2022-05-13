@@ -1,6 +1,6 @@
 # Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning
-This repository contains a Tensorflow 2.7.0 implementation from the paper
-**['Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning']().**
+This repository contains a Tensorflow 2.7.0 implementation from the paper 
+[**'Nderitu, P. *et al.,* Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning'**]()
 
 ## Key Dependencies
    - Python v3.8.x
@@ -16,7 +16,7 @@ This repository contains a Tensorflow 2.7.0 implementation from the paper
 
 ## Ground Truth Definitions
 Labels for laterality, retinal presence, retinal field and gradability were defined by an ophthalmology fellow.
-The figure below shows examples from the external test set. More details can be found in our paper [supplementary materials]().
+The figure below shows examples of images and labels from the external test set.
 
 ![fig](ground_truth/gt_definitions.jpg )
 
@@ -41,7 +41,7 @@ development dataset and will be randomly split 80/20 into train/val dataset with
 - Known_Laterality_Retinal (*For Retinal_Field and Gradability models*)
 
 ### Modes
-**tune**: Tune mode will load the development csv, split into train/val datasets at 80/20 splits and train a single 
+**tune**: Tune mode will load the development csv, split into train/val datasets at 88%/12% splits and train a single 
 or multi-output model based on the provided label_column +/- aux-column with 20 iterations performed 
 (max 3 epochs per iteration), and the hparam space is randomly sampled as follows: 
 dropout (0.2, 0.5), learning_rate (1e-4, 1e-2) and regularisation (0.0001, 0.01).
@@ -54,7 +54,7 @@ are reached then the whole model is trained.
 **test**: Test mode will load the csv and return confusion matrices, ROC and precision-recall curves for the label_column +/- 
 aux_column and save the resulting figure.
 
-**Predict**: Predict mode will load the csv and return predictions for binary labels or the argmax index for 
+**predict**: Predict mode will load the csv and return predictions for binary labels or the argmax index for 
 multi-class labels saved in the original csv.
 
 ### Single-output model with tune, train, test or predict modes
@@ -65,7 +65,7 @@ If performing inference (test or predict modes), ```-mp ['path to the trained mo
 ### Multi-output model with tune, train, test or predict modes
 ```main.py  -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality']  -al ['second label column e.g., Retinal_Presence'] -mt multi-output -m ['mode']```
 
-If performing inference (test or predict modes), ```-mp ['path to the trained model']``` must also be provided.
+If performing inference (test or predict modes), ```-mp ['path to the trained tensorflow model']``` must also be provided.
 
 #### Other Arguments
 - -ucw: If class weights should be used (*single-output models only*) (default: True)
@@ -81,25 +81,16 @@ If performing inference (test or predict modes), ```-mp ['path to the trained mo
 - *patience: Early stopping patience (default: 3 epochs)*
 - *early_stopping: This is performed by default and the val_AUC is monitored for single-output models whilst the 
   val_loss is used for multi-output models*
-- *train_val_split: Ratio of development dataset to split into train and val partitions (default: 80/20)*
+- *train_val_split: Ratio of development dataset to split into train and val partitions (default: 88/12). 
+  Assumes 20% test set already split*
 - *save_examples: Save a batch of image examples for inspection (default:True)*
 - *seed: Random seed for splitting development dataset into train/val partitions (default: 7)*
 
 ## Funding
-This work is wholly funded by Diabetes UK via a [Sir George Alberti Research Training Fellowship](https://www.diabetes.org.uk/research/our-research-projects/london/nderitu-ai-retinopathy) grant to Paul Nderitu.
+This work is wholly funded by Diabetes UK via a 
+[Sir George Alberti Research Training Fellowship](https://www.diabetes.org.uk/research/our-research-projects/london/nderitu-ai-retinopathy) grant to Paul Nderitu.
 
 ## Citation
-If you use this work as part of your project, please cite [Nderitu, P *et al.,* (2022)]()
-
-```bibtex
-@article{nderitup2022,
-  title={Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning},
-  author={},
-  journal={},
- year = {2022},
-  number = {},
-  pages = {},
-  publisher = {},
-  volume = {},
-  doi = {},
-}
+If you use this work as part of your project, please cite [Paul Nderitu, Joan M. Nunez do Rio, Ms Laura Webster, 
+Samantha S. Mann, David Hopkins, M. Jorge Cardoso, Marc Modat, Christos Bergeles, Timothy L. Jackson. 
+**Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning**. *Scientific Reports* (2022)]()

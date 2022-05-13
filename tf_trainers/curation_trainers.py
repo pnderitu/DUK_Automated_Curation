@@ -314,14 +314,15 @@ class SingleOutputClassifier:
 
         return tf_ds
 
-    def _get_train_val(self, train_val_split: float = 0.8, make_train: bool = True, make_val: bool = True):
+    def _get_train_val(self, train_val_split: float = 0.88, make_train: bool = True, make_val: bool = True):
         """
         Function for group splitting images into a train and val datasets. Grouping is via the PID is present so that
         patients with multiple images are exclusively in the train or val dataset.
         After dataframes are created, they are converted into TF dataset objects for optimised training.
         The dataframes are saved as a csv for later use/verification. Random state seeds set to allow repeatability.
 
-        :param train_val_split: Size of the train and val dataset (default: 0.8) which leaves 0.2 for the val set
+        :param train_val_split: Size of the train and val dataset (default: 0.88) which leaves 0.12 for the val set
+        Assumes the test set split already at 20%.
         :param make_train: Bool, if True, make val dataset (default: True)
         :param make_val: Bool, if True, make val dataset (default: True)
         :return: Train and val datasets
@@ -613,7 +614,7 @@ class SingleOutputClassifier:
 
 class MultiOutputClassifier(SingleOutputClassifier):
     """
-    This class performs multi-output training of the label column ans uses the aux_column as auxiliary labels.
+    This class performs multi-output training of the label column and uses the aux_column as auxiliary labels.
     """
 
     def __init__(self, **kwargs):
