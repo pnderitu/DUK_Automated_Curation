@@ -9,12 +9,15 @@ from tf_predict import SingleOutputPredictor, MultiOutputPredictor
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
+    # -------------------------------------------  Main Args -------------------------------------------------------- #
     parser.add_argument('-dp', '--df_path', type=str,
                         default='ground_truth/external_test_labels.csv',
                         help='Path with the csv file containing the Image_IDs, patient ID [PID] (optional) +/- labels'
                              '(default: ground_truth/external_test_labels.csv')
+
     parser.add_argument('-ip', '--image_path', type=str, required=True,
                         help='Path to the images')
+
     parser.add_argument('-sp', '--save_path', type=str, required=True,
                         help='Path to save logs, models, results and examples')
 
@@ -26,11 +29,17 @@ if __name__ == '__main__':
                              "otherwise None (default: Retinal_Presence)")
 
     parser.add_argument('-mt', '--model_type', type=str, default='multi-output',
-                        help='Select the modelling approach (default: multi-output)')
+                        help='Select the modelling approach. Must be multi-output or single-output '
+                             '(default: multi-output)')
 
     parser.add_argument('-m', '--mode', type=str, default="train",
-                        help='Select the mode. Must be  tune, train, test or predict (default: train)')
+                        help='Select the mode. Must be tune, train, test or predict (default: train)')
 
+    # ---------------------------------------  Predict/Test Args ---------------------------------------------------- #
+    parser.add_argument('-mp', '--model_path', type=str,
+                        help='Path to a saved Tensorflow model if testing or predicting (if testing/predicting)')
+
+    # -------------------------------------------  Aux Args -------------------------------------------------------- #
     parser.add_argument('-ucw', '--use_class_weights', type=bool, default=True,
                         help="If class weights should be used (single-output models only) (default: True)")
     parser.add_argument('-bs', '--batch_size', type=int, default=32,
@@ -47,9 +56,6 @@ if __name__ == '__main__':
                         help="Image height (default: 224)")
     parser.add_argument('-iw', '--image_width', type=int, default=224,
                         help="Image width (default: 224)")
-
-    parser.add_argument('-mp', '--model_path', type=str,
-                        help='Path to a saved Tensorflow model if testing or predicting (if testing/predicting)')
 
     # Get args and add config
     args = parser.parse_args()
