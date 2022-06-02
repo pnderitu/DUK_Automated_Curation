@@ -1,6 +1,6 @@
 # Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning
 This repository contains a Tensorflow 2.7.0 implementation from the paper 
-[**'Nderitu, P. *et al.,* Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning'**]()
+[**'Nderitu, P. *et al.,* Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning (2022).'**]()
 
 ## Key Dependencies
    - Python v3.8.x
@@ -16,37 +16,52 @@ This repository contains a Tensorflow 2.7.0 implementation from the paper
 
 ## Ground Truth Definitions
 Labels for laterality, retinal presence, retinal field and gradability were defined by an ophthalmology fellow.
-The figure below shows examples of images and labels from the external test set.
+The figure below shows examples of images and labels from the external test set. External test sets are available from
+the [Universidad Nacional de Asunción (Paraguay)](https://zenodo.org/record/4891308#.YXgLsp7ML-g) and 
+[UBIRIS Periocular (Portugal)](http://iris.di.ubi.pt/ubipr.html) datasets.
 
 ![fig](ground_truth/gt_definitions.jpg )
 
 ## Use
 All modes require a csv file. If training or tuning then the supplied csv is assumed to be the 
-development dataset and will be randomly split 80/20 into train/val dataset with respect to the PID if provided.
+development dataset and will be randomly split 88/12 into train/val dataset with respect to the PID if provided and 
+assumes 20% test set already split for an internal test set at the patient-level.
 
-**If training, tuning or testing ensure the following columns are provided and named as follows.**
-- Path (*Path to the sample image*)
+**If training, tuning or testing ensure the following columns should be provided and named as follows.**
+- Path 
+  - *Full path to per sample images*
 - Laterality 
+  - Right, Left or Unidentifiable
 - Retinal_Presence
-- Retinal_Field 
-- Gradability 
-- Known_Laterality_Retinal (*For Retinal_Field and Gradability models*)
-   - With 'Yes' to indicate retinal images of known laterality
-- PID (*optional unique identifier column if multiple samples from the same patient*)
+  - Non-Retinal or Retinal
+- Retinal_Field
+  - Macula, Nasal or ORF
+- Gradability
+  - Ungradable or Gradable
+- Known_Laterality_Retinal
+  - **'Yes'** per sample to indicating retinal images of known laterality
+  - *Applies to Retinal_Field and Gradability models*
+- PID
+  - *Optional unique identifier column if multiple samples from the same patient*
 
 
-**If predicting then the following columns must be present**
+**If predict mode, only the following column are required in the csv file**
 - Image_ID
-- Laterality (*For Retinal_Field and Gradability models*)
-- Known_Laterality_Retinal (*For Retinal_Field and Gradability models*)
+  - Unique image identifier
+- Laterality
+  - Right, Left or Unidentifiable
+  - *Applies to Retinal_Field and Gradability models*
+- Known_Laterality_Retinal 
+  - **'Yes'** per sample to indicating retinal images of known laterality   
+  - *Applies to Retinal_Field and Gradability models*
 
 ### Modes
-**tune**: Tune mode will load the development csv, split into train/val datasets at 88%/12% splits and train a single 
+**tune**: Tune mode will load the development csv, split into train/val datasets at 88/12 splits and train a single 
 or multi-output model based on the provided label_column +/- aux-column with 20 iterations performed 
 (max 3 epochs per iteration), and the hparam space is randomly sampled as follows: 
 dropout (0.2, 0.5), learning_rate (1e-4, 1e-2) and regularisation (0.0001, 0.01).
 
-**train**: Training mode will load the csv, split into train/val datasets at 80/20 splits and train a single 
+**train**: Training mode will load the csv, split into train/val datasets at 88/12 splits and train a single 
 or multi-output model based on the provided label_column +/- aux_column and save the model at each epoch if the 
 monitored metric improves (*val_AUC for single-output models, otherwise val_loss*). Note, initially the encoder weights (EfficientNet-V1-B0) are frozen until early stop criteria 
 are reached then the whole model is trained.
@@ -57,13 +72,13 @@ aux_column and save the resulting figure.
 **predict**: Predict mode will load the csv and return predictions for binary labels or the argmax index for 
 multi-class labels saved in the original csv.
 
-### Single-output model with tune, train, test or predict modes
-```main.py  -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality'] -mt single-output -m ['mode']```
+### Single-output Model Example
+```python main.py -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality'] -mt single-output -m ['mode']```
 
 If performing inference (test or predict modes), ```-mp ['path to the trained model']``` must also be provided.
 
-### Multi-output model with tune, train, test or predict modes
-```main.py  -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality']  -al ['second label column e.g., Retinal_Presence'] -mt multi-output -m ['mode']```
+### Multi-output Model Example
+```python main.py -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality']  -al ['second label column e.g., Retinal_Presence'] -mt multi-output -m ['mode']```
 
 If performing inference (test or predict modes), ```-mp ['path to the trained tensorflow model']``` must also be provided.
 
@@ -82,7 +97,7 @@ If performing inference (test or predict modes), ```-mp ['path to the trained te
 - *early_stopping: This is performed by default and the val_AUC is monitored for single-output models whilst the 
   val_loss is used for multi-output models*
 - *train_val_split: Ratio of development dataset to split into train and val partitions (default: 88/12). 
-  Assumes 20% test set already split*
+  Assumes 20% test set already split for an internal test set at the patient-level.*
 - *save_examples: Save a batch of image examples for inspection (default:True)*
 - *seed: Random seed for splitting development dataset into train/val partitions (default: 7)*
 
@@ -93,4 +108,4 @@ This work is wholly funded by Diabetes UK via a
 ## Citation
 If you use this work as part of your project, please cite [Paul Nderitu, Joan M. Nunez do Rio, Ms Laura Webster, 
 Samantha S. Mann, David Hopkins, M. Jorge Cardoso, Marc Modat, Christos Bergeles, Timothy L. Jackson. 
-**Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning**. *Scientific Reports* (2022)]()
+**Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning**. *Scientific Reports* (2022).]()
