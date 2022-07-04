@@ -1,6 +1,6 @@
 # Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning
 This repository contains a Tensorflow 2.7.0 implementation from the paper 
-[**'Nderitu, P. *et al.,* Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning (2022).'**]()
+['Nderitu P, *et al*. Automated image curation in diabetic retinopathy screening using deep learning'](https://rdcu.be/cQOe4)
 
 ## Key Dependencies
    - Python v3.8.x
@@ -16,9 +16,9 @@ This repository contains a Tensorflow 2.7.0 implementation from the paper
 
 ## Ground Truth Definitions
 Labels for laterality, retinal presence, retinal field and gradability were defined by an ophthalmology fellow.
-The figure below shows examples of images and labels from the external test set. External test sets are available from
+The figure below shows examples of images and labels from the external test set. External test images are available from
 the [Universidad Nacional de Asunción (Paraguay)](https://zenodo.org/record/4891308#.YXgLsp7ML-g) and 
-[UBIRIS Periocular (Portugal)](http://iris.di.ubi.pt/ubipr.html) datasets.
+[UBIRIS Periocular (Portugal)](http://iris.di.ubi.pt/ubipr.html) open-access datasets.
 
 ![fig](ground_truth/gt_definitions.jpg )
 
@@ -27,32 +27,33 @@ All modes require a csv file. If training or tuning then the supplied csv is ass
 development dataset and will be randomly split 88/12 into train/val dataset with respect to the PID if provided and 
 assumes 20% test set already split for an internal test set at the patient-level.
 
-**If training, tuning or testing ensure the following columns should be provided and named as follows.**
+**If training, tuning or testing, the following columns are required with classes as identified 
+define below.**
 - Path 
   - *Full path to per sample images*
 - Laterality 
-  - Right, Left or Unidentifiable
+  - *Classes*: Right, Left or Unidentifiable
 - Retinal_Presence
-  - Non-Retinal or Retinal
+  - *Classes*: Non-Retinal or Retinal
 - Retinal_Field
-  - Macula, Nasal or ORF
+  - *Classes*: Macula, Nasal or ORF
 - Gradability
-  - Ungradable or Gradable
+  - *Classes*: Ungradable or Gradable
 - Known_Laterality_Retinal
-  - **'Yes'** per sample to indicating retinal images of known laterality
+  - *Classes*: Yes (*per sample indicating retinal images of known laterality*)
   - *Applies to Retinal_Field and Gradability models*
 - PID
   - *Optional unique identifier column if multiple samples from the same patient*
 
 
-**If predict mode, only the following column are required in the csv file**
+**If in predict mode, only the following columns are required with classes as identified define below.**
 - Image_ID
   - Unique image identifier
 - Laterality
-  - Right, Left or Unidentifiable
+  - *Classes*: Right, Left or Unidentifiable
   - *Applies to Retinal_Field and Gradability models*
 - Known_Laterality_Retinal 
-  - **'Yes'** per sample to indicating retinal images of known laterality   
+  - *Classes*: Yes (*per sample indicating retinal images of known laterality*)
   - *Applies to Retinal_Field and Gradability models*
 
 ### Modes
@@ -63,11 +64,11 @@ dropout (0.2, 0.5), learning_rate (1e-4, 1e-2) and regularisation (0.0001, 0.01)
 
 **train**: Training mode will load the csv, split into train/val datasets at 88/12 splits and train a single 
 or multi-output model based on the provided label_column +/- aux_column and save the model at each epoch if the 
-monitored metric improves (*val_AUC for single-output models, otherwise val_loss*). Note, initially the encoder weights (EfficientNet-V1-B0) are frozen until early stop criteria 
-are reached then the whole model is trained.
+monitored metric improves (*val_AUC for single-output models, otherwise val_loss*). Note, initially the encoder weights 
+(EfficientNet-V1-B0) are frozen until early stop criteria are reached then the whole model is trained.
 
-**test**: Test mode will load the csv and return confusion matrices, ROC and precision-recall curves for the label_column +/- 
-aux_column and save the resulting figure.
+**test**: Test mode will load the csv and return confusion matrices, ROC and precision-recall curves for the 
+label_column +/- aux_column and save the resulting figure.
 
 **predict**: Predict mode will load the csv and return predictions for binary labels or the argmax index for 
 multi-class labels saved in the original csv.
@@ -80,7 +81,8 @@ If performing inference (test or predict modes), ```-mp ['path to the trained mo
 ### Multi-output Model Example
 ```python main.py -dp ['path to csv'] -ip ['path to images'] -sp ['path to save logs/models/examples/results'] -l ['label column e.g., Laterality']  -al ['second label column e.g., Retinal_Presence'] -mt multi-output -m ['mode']```
 
-If performing inference (test or predict modes), ```-mp ['path to the trained tensorflow model']``` must also be provided.
+If performing inference (test or predict modes), ```-mp ['path to the trained tensorflow model']``` must also be
+provided.
 
 #### Other Arguments
 - -ucw: If class weights should be used (*single-output models only*) (default: True)
@@ -106,6 +108,4 @@ This work is wholly funded by Diabetes UK via a
 [Sir George Alberti Research Training Fellowship](https://www.diabetes.org.uk/research/our-research-projects/london/nderitu-ai-retinopathy) grant to Paul Nderitu.
 
 ## Citation
-If you use this work as part of your project, please cite [Paul Nderitu, Joan M. Nunez do Rio, Ms Laura Webster, 
-Samantha S. Mann, David Hopkins, M. Jorge Cardoso, Marc Modat, Christos Bergeles, Timothy L. Jackson. 
-**Automated Image Curation in Diabetic Retinopathy Screening using Deep Learning**. *Scientific Reports* (2022).]()
+If you use this work as part of your project, please cite [Nderitu, P., Nunez do Rio, J.M., Webster, M.L. *et al*. Automated image curation in diabetic retinopathy screening using deep learning. *Sci Rep* **12**, 11196 (2022). https://doi.org/10.1038/s41598-022-15491-1'](https://rdcu.be/cQOe4)
