@@ -109,3 +109,6 @@ This work is wholly funded by Diabetes UK via a
 
 ## Citation
 If you use this work as part of your project, please cite [Nderitu, P., Nunez do Rio, J.M., Webster, M.L. *et al*. Automated image curation in diabetic retinopathy screening using deep learning. *Sci Rep* **12**, 11196 (2022). https://doi.org/10.1038/s41598-022-15491-1'](https://rdcu.be/cQOe4)
+
+## License
+This code is licensed under the [Apache 2.0 License](https://opensource.org/licenses/Apache-2.0)

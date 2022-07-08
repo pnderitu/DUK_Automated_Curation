@@ -1,5 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2022, Paul Nderitu
+# All rights reserved.
+# This source code is licensed under the Apache 2.0 license found in the
+# LICENSE file in the root directory of this source tree.
+
 # Automated Image Curation Main
-# Paul Nderitu & Diabetes UK 2021
 
 import argparse
 from utils import parse_config
